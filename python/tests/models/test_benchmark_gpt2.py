@@ -18,7 +18,7 @@ device = torch.device("cuda")
 config = load_hf_config(model_name)
 gpt_config = GPT2Config.from_hf(config)
 
-naive_gpt_config = GPT2Config.from_hf(config)
+naive_gpt_config = GPT2Config.from_hf(config, use_naive_attention=True)
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 text = (
@@ -100,8 +100,12 @@ def test_benchmark_gpt2(benchmark):
         del model
         torch.cuda.empty_cache()
 
-        assert results[False][1].equal(results[True][1])
+    assert results[False][1].equal(results[True][1])
 
     if benchmark:
-        # TODO: print naive ms, fused ms, speedup (naive / fused)
-        print()
+        vanilla_ms = results[True][0]   # use_naive_attention=True (mha)
+        cobra_ms = results[False][0]    # use_naive_attention=False (fmha)
+
+        print(f"CobraML:  {cobra_ms:.3f} ms")
+        print(f"Vanilla:  {vanilla_ms:.3f} ms")
+        print(f"Speedup:  {vanilla_ms / cobra_ms:.2f}x")
