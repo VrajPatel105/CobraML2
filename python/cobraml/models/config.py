@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, fields
+
 from transformers.models.gpt2 import GPT2Config as GPT2ConfigHF
 
 
@@ -46,7 +48,9 @@ class GPT2Config(ModelConfig):
         return embedding_dim * 4
 
     @classmethod
-    def from_hf(cls, config: GPT2ConfigHF, use_naive_attention: bool = False) -> GPT2Config:
+    def from_hf(
+        cls, config: GPT2ConfigHF, use_naive_attention: bool = False
+    ) -> GPT2Config:
         return cls(
             embedding_dim=config.n_embd,
             num_heads=config.n_head,
