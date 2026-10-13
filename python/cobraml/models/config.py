@@ -46,7 +46,7 @@ class GPT2Config(ModelConfig):
         return embedding_dim * 4
 
     @classmethod
-    def from_hf(cls, config: GPT2ConfigHF) -> GPT2Config:
+    def from_hf(cls, config: GPT2ConfigHF, use_naive_attention: bool = False) -> GPT2Config:
         return cls(
             embedding_dim=config.n_embd,
             num_heads=config.n_head,
@@ -63,5 +63,5 @@ class GPT2Config(ModelConfig):
             attn_prob_drop=config.attn_pdrop,
             embed_prob_drop=config.embd_pdrop,
             resid_prob_drop=config.resid_pdrop,
-            use_naive_attention=False,
+            use_naive_attention=use_naive_attention,
         )
